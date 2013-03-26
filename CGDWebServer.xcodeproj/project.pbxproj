@@ -569,6 +569,7 @@
 				14E4A698170257B700205D95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		14E4A6DA170258B000205D95 /* Build configuration list for PBXNativeTarget "CGDWebServer(OSX)" */ = {
 			isa = XCConfigurationList;
@@ -577,6 +578,7 @@
 				14E4A6DC170258B000205D95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
