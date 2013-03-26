@@ -59,7 +59,7 @@ NSString* GCDWebServerGetMimeTypeForExtension(NSString* extension) {
 }
 
 NSString* GCDWebServerUnescapeURLString(NSString* string) {
-	return (__bridge NSString*)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (CFStringRef)string, CFSTR(""),
+	return (__bridge_transfer NSString*)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (CFStringRef)string, CFSTR(""),
 																		kCFStringEncodingUTF8);
 }
 
