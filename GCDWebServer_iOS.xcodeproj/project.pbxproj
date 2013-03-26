@@ -25,14 +25,16 @@
 		14C44FF7170179F9009E8DD6 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 14C44FF5170179F9009E8DD6 /* Credits.rtf */; };
 		14C44FFA170179F9009E8DD6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C44FF9170179F9009E8DD6 /* AppDelegate.m */; };
 		14C44FFD170179FA009E8DD6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14C44FFB170179FA009E8DD6 /* MainMenu.xib */; };
-		14C4500D17017A7D009E8DD6 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500517017A7D009E8DD6 /* GCDWebServer.m */; };
+		14C4500D17017A7D009E8DD6 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500517017A7D009E8DD6 /* GCDWebServer.m */; settings = {COMPILER_FLAGS = " -fno-objc-arc"; }; };
 		14C4500E17017A7D009E8DD6 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500517017A7D009E8DD6 /* GCDWebServer.m */; };
-		14C4500F17017A7D009E8DD6 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500717017A7D009E8DD6 /* GCDWebServerConnection.m */; };
+		14C4500F17017A7D009E8DD6 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500717017A7D009E8DD6 /* GCDWebServerConnection.m */; settings = {COMPILER_FLAGS = " -fno-objc-arc"; }; };
 		14C4501017017A7D009E8DD6 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500717017A7D009E8DD6 /* GCDWebServerConnection.m */; };
-		14C4501117017A7D009E8DD6 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500A17017A7D009E8DD6 /* GCDWebServerRequest.m */; };
+		14C4501117017A7D009E8DD6 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500A17017A7D009E8DD6 /* GCDWebServerRequest.m */; settings = {COMPILER_FLAGS = " -fno-objc-arc"; }; };
 		14C4501217017A7D009E8DD6 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500A17017A7D009E8DD6 /* GCDWebServerRequest.m */; };
-		14C4501317017A7D009E8DD6 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500C17017A7D009E8DD6 /* GCDWebServerResponse.m */; };
+		14C4501317017A7D009E8DD6 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500C17017A7D009E8DD6 /* GCDWebServerResponse.m */; settings = {COMPILER_FLAGS = " -fno-objc-arc"; }; };
 		14C4501417017A7D009E8DD6 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500C17017A7D009E8DD6 /* GCDWebServerResponse.m */; };
+		14FDC15717023F64003EF42C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14FDC15617023F64003EF42C /* CFNetwork.framework */; };
+		14FDC15917023F6A003EF42C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14FDC15817023F6A003EF42C /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +76,8 @@
 		14C4500A17017A7D009E8DD6 /* GCDWebServerRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerRequest.m; sourceTree = "<group>"; };
 		14C4500B17017A7D009E8DD6 /* GCDWebServerResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerResponse.h; sourceTree = "<group>"; };
 		14C4500C17017A7D009E8DD6 /* GCDWebServerResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerResponse.m; sourceTree = "<group>"; };
+		14FDC15617023F64003EF42C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		14FDC15817023F6A003EF42C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14FDC15917023F6A003EF42C /* MobileCoreServices.framework in Frameworks */,
+				14FDC15717023F64003EF42C /* CFNetwork.framework in Frameworks */,
 				144CEA3D1701783500FADC10 /* UIKit.framework in Frameworks */,
 				144CEA3F1701783500FADC10 /* Foundation.framework in Frameworks */,
 				144CEA411701783500FADC10 /* CoreGraphics.framework in Frameworks */,
@@ -120,6 +126,8 @@
 		144CEA3B1701783500FADC10 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				14FDC15817023F6A003EF42C /* MobileCoreServices.framework */,
+				14FDC15617023F64003EF42C /* CFNetwork.framework */,
 				144CEA3C1701783500FADC10 /* UIKit.framework */,
 				144CEA3E1701783500FADC10 /* Foundation.framework */,
 				144CEA401701783500FADC10 /* CoreGraphics.framework */,
@@ -532,6 +540,7 @@
 				14C44FFF170179FA009E8DD6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

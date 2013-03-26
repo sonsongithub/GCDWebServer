@@ -187,7 +187,7 @@ static dispatch_queue_t _formatterQueue = NULL;
 
 - (void)_writeData:(NSData*)data withCompletionBlock:(WriteDataCompletionBlock)block {
   [data retain];
-  dispatch_data_t buffer = dispatch_data_create(data.bytes, data.length, dispatch_get_current_queue(), ^{
+  dispatch_data_t buffer = dispatch_data_create(data.bytes, data.length, dispatch_get_main_queue(), ^{
     [data release];
   });
   [self _writeBuffer:buffer withCompletionBlock:block];

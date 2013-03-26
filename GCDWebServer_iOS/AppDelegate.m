@@ -13,6 +13,17 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+	
+	self.webServer = [[GCDWebServer alloc] init];
+	[self.webServer addDefaultHandlerForMethod:@"GET"
+							  requestClass:[GCDWebServerRequest class]
+							  processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+								  
+								  return [GCDWebServerDataResponse responseWithHTML:@"<html><body><p>Hello World</p></body></html>"];
+								  
+							  }];
+	[self.webServer runWithPort:8085];
+	
     return YES;
 }
 							
