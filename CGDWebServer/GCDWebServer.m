@@ -109,16 +109,11 @@ static void _SignalHandler(int signal) {
 }
 
 - (void)dealloc {
-//	Block_release(_matchBlock);
-//	Block_release(_processBlock);
-//	[super dealloc];
 }
 
 @end
 
 @implementation GCDWebServer
-
-@synthesize handlers=_handlers, port=_port;
 
 + (void)initialize {
 	[GCDWebServerConnection class];  // Initialize class immediately to make sure it happens on the main thread
@@ -132,20 +127,19 @@ static void _SignalHandler(int signal) {
 }
 
 - (void)dealloc {
-	if (_runLoop) {
+	if (self.runLoop)
 		[self stop];
-	}
 	self.handlers = nil;
 }
 
 - (void)addHandlerWithMatchBlock:(GCDWebServerMatchBlock)matchBlock processBlock:(GCDWebServerProcessBlock)handlerBlock {
-	DCHECK(_runLoop == nil);
+	DCHECK(self.runLoop == nil);
 	GCDWebServerHandler* handler = [[GCDWebServerHandler alloc] initWithMatchBlock:matchBlock processBlock:handlerBlock];
 	[self.handlers insertObject:handler atIndex:0];
 }
 
 - (void)removeAllHandlers {
-	DCHECK(_runLoop == nil);
+	DCHECK(self.runLoop == nil);
 	[self.handlers removeAllObjects];
 }
 
@@ -171,6 +165,7 @@ static void _SocketCallBack(CFSocketRef socket, CFSocketCallBackType type, CFDat
 		@autoreleasepool {
 			Class class = [[(__bridge GCDWebServer*)info class] connectionClass];
 			GCDWebServerConnection* connection = [[class alloc] initWithServer:(__bridge GCDWebServer*)info address:(__bridge NSData*)address socket:handle];
+			NSLog(@"%@", connection);
 		}
 	} else {
 		DNOT_REACHED();
@@ -179,7 +174,7 @@ static void _SocketCallBack(CFSocketRef socket, CFSocketCallBackType type, CFDat
 
 - (BOOL)startWithRunloop:(NSRunLoop*)runloop port:(NSUInteger)port bonjourName:(NSString*)name {
 	DCHECK(runloop);
-	DCHECK(_runLoop == nil);
+	DCHECK(self.runLoop == nil);
 	CFSocketContext context = {0, (__bridge void*)self, NULL, NULL, NULL};
 	_socket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, kCFSocketAcceptCallBack, _SocketCallBack, &context);
 	if (_socket) {
@@ -219,7 +214,7 @@ static void _SocketCallBack(CFSocketRef socket, CFSocketCallBackType type, CFDat
 					LOG_ERROR(@"Failed creating CFNetService");
 				}
 			}
-			_runLoop = runloop;//[runloop retain];
+			self.runLoop = runloop;
 			LOG_VERBOSE(@"%@ started on port %i", [self class], (int)_port);
 		} else {
 			LOG_ERROR(@"Failed binding socket");
@@ -229,18 +224,18 @@ static void _SocketCallBack(CFSocketRef socket, CFSocketCallBackType type, CFDat
 	} else {
 		LOG_ERROR(@"Failed creating CFSocket");
 	}
-	return (_runLoop != nil ? YES : NO);
+	return (self.runLoop != nil ? YES : NO);
 }
 
 - (BOOL)isRunning {
-	return (_runLoop != nil ? YES : NO);
+	return (self.runLoop != nil ? YES : NO);
 }
 
 - (void)stop {
-	DCHECK(_runLoop != nil);
+	DCHECK(self.runLoop != nil);
 	if (_socket) {
 		if (_service) {
-			CFNetServiceUnscheduleFromRunLoop(_service, [_runLoop getCFRunLoop], kCFRunLoopCommonModes);
+			CFNetServiceUnscheduleFromRunLoop(_service, [self.runLoop getCFRunLoop], kCFRunLoopCommonModes);
 			CFNetServiceSetClient(_service, NULL, NULL);
 			CFRelease(_service);
 		}
@@ -250,8 +245,7 @@ static void _SocketCallBack(CFSocketRef socket, CFSocketCallBackType type, CFDat
 		_socket = NULL;
 		LOG_VERBOSE(@"%@ stopped", [self class]);
 	}
-//	[_runLoop release];
-	_runLoop = nil;
+	self.runLoop = nil;
 	_port = 0;
 }
 
@@ -380,10 +374,8 @@ static void _SocketCallBack(CFSocketRef socket, CFSocketCallBackType type, CFDat
 							[html appendString:@"</body></html>\n"];
 							response = [GCDWebServerDataResponse responseWithHTML:html];
 					}
-//					response = [self _responseWithContentsOfDirectory:filePath];
 				} else {
 					response = [GCDWebServerFileResponse responseWithFile:filePath];
-//					response = [self _responseWithContentsOfFile:filePath];
 				}
 			}
 			if (response) {
