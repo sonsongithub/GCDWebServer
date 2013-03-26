@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'GCDWebServer_iOS' target in the 'GCDWebServer_iOS' project
+// Prefix header for all source files of the 'CGDWebServer(iOS)' target in the 'CGDWebServer(iOS)' project
 //
 
 #import <Availability.h>

@@ -1,9 +1,9 @@
 //
 //  AppDelegate.h
-//  GCDWebServer_Mac
+//  CGDWebServer(OSX)
 //
-//  Created by sonson on 2013/03/26.
-//  Copyright (c) 2013年 sonson. All rights reserved.
+//  Created by sonson on 2013/03/27.
+//
 //
 
 #import <Cocoa/Cocoa.h>

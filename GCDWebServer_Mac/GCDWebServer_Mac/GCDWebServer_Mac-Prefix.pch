@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'GCDWebServer_Mac' target in the 'GCDWebServer_Mac' project
-//
-
-#ifdef __OBJC__
-	#import <Cocoa/Cocoa.h>
-#endif
