@@ -33,13 +33,12 @@ typedef GCDWebServerResponse* (^GCDWebServerProcessBlock)(GCDWebServerRequest* r
 
 @interface GCDWebServer : NSObject {
 @private
-  NSMutableArray* _handlers;
-  
-  NSUInteger _port;
-  NSRunLoop* _runLoop;
-  CFSocketRef _socket;
-  CFNetServiceRef _service;
+	NSUInteger _port;
+	NSRunLoop* _runLoop;
+	CFSocketRef _socket;
+	CFNetServiceRef _service;
 }
+@property(nonatomic, strong) NSMutableArray *handlers;
 @property(nonatomic, readonly, getter=isRunning) BOOL running;
 @property(nonatomic, readonly) NSUInteger port;
 - (void)addHandlerWithMatchBlock:(GCDWebServerMatchBlock)matchBlock processBlock:(GCDWebServerProcessBlock)processBlock;

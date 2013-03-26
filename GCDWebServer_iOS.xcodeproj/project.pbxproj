@@ -25,7 +25,7 @@
 		14C44FF7170179F9009E8DD6 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 14C44FF5170179F9009E8DD6 /* Credits.rtf */; };
 		14C44FFA170179F9009E8DD6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C44FF9170179F9009E8DD6 /* AppDelegate.m */; };
 		14C44FFD170179FA009E8DD6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14C44FFB170179FA009E8DD6 /* MainMenu.xib */; };
-		14C4500D17017A7D009E8DD6 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500517017A7D009E8DD6 /* GCDWebServer.m */; settings = {COMPILER_FLAGS = " -fno-objc-arc"; }; };
+		14C4500D17017A7D009E8DD6 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500517017A7D009E8DD6 /* GCDWebServer.m */; };
 		14C4500E17017A7D009E8DD6 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500517017A7D009E8DD6 /* GCDWebServer.m */; };
 		14C4500F17017A7D009E8DD6 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500717017A7D009E8DD6 /* GCDWebServerConnection.m */; settings = {COMPILER_FLAGS = " -fno-objc-arc"; }; };
 		14C4501017017A7D009E8DD6 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C4500717017A7D009E8DD6 /* GCDWebServerConnection.m */; };

@@ -47,7 +47,6 @@ static inline void __LogMessage(long level, NSString* format, ...) {
     NSString* message = [[NSString alloc] initWithFormat:format arguments:arguments];
     va_end(arguments);
     printf("[%s] %s\n", levelNames[level], [message UTF8String]);
-    [message release];
   }
 }
 
@@ -97,7 +96,7 @@ NSDictionary* GCDWebServerParseURLEncodedForm(NSString* form);
 @end
 
 @interface GCDWebServer ()
-@property(nonatomic, readonly) NSArray* handlers;
+//@property(nonatomic, readonly) NSArray* handlers;
 @end
 
 @interface GCDWebServerHandler : NSObject {
