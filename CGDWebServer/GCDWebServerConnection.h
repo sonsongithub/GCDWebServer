@@ -31,17 +31,17 @@
 
 @interface GCDWebServerConnection : NSObject {
 @private
-  GCDWebServer* _server;
-  NSData* _address;
-  CFSocketNativeHandle _socket;
-  NSUInteger _bytesRead;
-  NSUInteger _bytesWritten;
-  
-  CFHTTPMessageRef _requestMessage;
-  GCDWebServerRequest* _request;
-  GCDWebServerHandler* _handler;
-  CFHTTPMessageRef _responseMessage;
-  GCDWebServerResponse* _response;
+	GCDWebServer* _server;
+	NSData* _address;
+	CFSocketNativeHandle _socket;
+	NSUInteger _bytesRead;
+	NSUInteger _bytesWritten;
+	
+	CFHTTPMessageRef _requestMessage;
+	GCDWebServerRequest* _request;
+	GCDWebServerHandler* _handler;
+	CFHTTPMessageRef _responseMessage;
+	GCDWebServerResponse* _response;
 }
 @property(nonatomic, readonly) GCDWebServer* server;
 @property(nonatomic, readonly) NSData* address;  // struct sockaddr
