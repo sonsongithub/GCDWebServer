@@ -85,7 +85,6 @@ static dispatch_queue_t _formatterQueue = NULL;
 				return true;
 			});
 			block(data);
-			[data release];
 		} else {
 			block(nil);
 		}
@@ -186,18 +185,15 @@ static dispatch_queue_t _formatterQueue = NULL;
 }
 
 - (void)_writeData:(NSData*)data withCompletionBlock:(WriteDataCompletionBlock)block {
-	[data retain];
 	dispatch_data_t buffer = dispatch_data_create(data.bytes, data.length, dispatch_get_main_queue(), ^{
-		[data release];
 	});
 	[self _writeBuffer:buffer withCompletionBlock:block];
-	dispatch_release(buffer);
 }
 
 - (void)_writeHeadersWithCompletionBlock:(WriteHeadersCompletionBlock)block {
 	DCHECK(_responseMessage);
 	CFDataRef message = CFHTTPMessageCopySerializedMessage(_responseMessage);
-	[self _writeData:(NSData*)message withCompletionBlock:block];
+	[self _writeData:(__bridge NSData*)message withCompletionBlock:block];
 	CFRelease(message);
 }
 
@@ -216,7 +212,6 @@ static dispatch_queue_t _formatterQueue = NULL;
 			}
 			
 		}];
-		dispatch_release(wrapper);
 	} else if (result < 0) {
 		LOG_ERROR(@"Failed reading response body on socket %i (error %i)", _socket, (int)result);
 		block(NO);
@@ -241,7 +236,7 @@ static dispatch_queue_t _formatterQueue = NULL;
 	}
 	if (_continueData == nil) {
 		CFHTTPMessageRef message = CFHTTPMessageCreateResponse(kCFAllocatorDefault, 100, NULL, kCFHTTPVersion1_1);
-		_continueData = (NSData*)CFHTTPMessageCopySerializedMessage(message);
+		_continueData = (__bridge NSData*)CFHTTPMessageCopySerializedMessage(message);
 		CFRelease(message);
 		DCHECK(_continueData);
 	}
@@ -249,7 +244,7 @@ static dispatch_queue_t _formatterQueue = NULL;
 		_dateFormatter = [[NSDateFormatter alloc] init];
 		_dateFormatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
 		_dateFormatter.dateFormat = @"EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'";
-		_dateFormatter.locale = [[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease];
+		_dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
 		DCHECK(_dateFormatter);
 	}
 	if (_formatterQueue == NULL) {
@@ -261,10 +256,10 @@ static dispatch_queue_t _formatterQueue = NULL;
 - (void)_initializeResponseHeadersWithStatusCode:(NSInteger)statusCode {
 	_responseMessage = CFHTTPMessageCreateResponse(kCFAllocatorDefault, statusCode, NULL, kCFHTTPVersion1_1);
 	CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Connection"), CFSTR("Close"));
-	CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Server"), (CFStringRef)[[_server class] serverName]);
+	CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Server"), (__bridge CFStringRef)[[_server class] serverName]);
 	dispatch_sync(_formatterQueue, ^{
 		NSString* date = [_dateFormatter stringFromDate:[NSDate date]];
-		CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Date"), (CFStringRef)date);
+		CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Date"), (__bridge CFStringRef)date);
 	});
 }
 
@@ -284,23 +279,23 @@ static dispatch_queue_t _formatterQueue = NULL;
 	
 	GCDWebServerResponse* response = [self processRequest:_request withBlock:_handler.processBlock];
 	if (![response hasBody] || [response open]) {
-		_response = [response retain];
+		_response = response;
 	}
 	
 	if (_response) {
 		[self _initializeResponseHeadersWithStatusCode:_response.statusCode];
 		NSUInteger maxAge = _response.cacheControlMaxAge;
 		if (maxAge > 0) {
-			CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Cache-Control"), (CFStringRef)[NSString stringWithFormat:@"max-age=%i, public", (int)maxAge]);
+			CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Cache-Control"), (__bridge CFStringRef)[NSString stringWithFormat:@"max-age=%i, public", (int)maxAge]);
 		} else {
 			CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Cache-Control"), CFSTR("no-cache"));
 		}
 		[_response.additionalHeaders enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop) {
-			CFHTTPMessageSetHeaderFieldValue(_responseMessage, (CFStringRef)key, (CFStringRef)obj);
+			CFHTTPMessageSetHeaderFieldValue(_responseMessage, (__bridge CFStringRef)key, (__bridge CFStringRef)obj);
 		}];
 		if ([_response hasBody]) {
-			CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Content-Type"), (CFStringRef)_response.contentType);
-			CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Content-Length"), (CFStringRef)[NSString stringWithFormat:@"%i", (int)_response.contentLength]);
+			CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Content-Type"), (__bridge CFStringRef)_response.contentType);
+			CFHTTPMessageSetHeaderFieldValue(_responseMessage, CFSTR("Content-Length"), (__bridge CFStringRef)[NSString stringWithFormat:@"%i", (int)_response.contentLength]);
 		}
 		[self _writeHeadersWithCompletionBlock:^(BOOL success) {
 			
@@ -369,22 +364,22 @@ static dispatch_queue_t _formatterQueue = NULL;
 	[self _readHeadersWithCompletionBlock:^(NSData* extraData) {
 		
 		if (extraData) {
-			NSString* requestMethod = [[(id)CFHTTPMessageCopyRequestMethod(_requestMessage) autorelease] uppercaseString];
+			NSString* requestMethod = [(__bridge_transfer NSString*)CFHTTPMessageCopyRequestMethod(_requestMessage) uppercaseString];
 			DCHECK(requestMethod);
-			NSURL* requestURL = [(id)CFHTTPMessageCopyRequestURL(_requestMessage) autorelease];
+			NSURL* requestURL = (__bridge_transfer id)CFHTTPMessageCopyRequestURL(_requestMessage);
 			DCHECK(requestURL);
-			NSString* requestPath = GCDWebServerUnescapeURLString([(id)CFURLCopyPath((CFURLRef)requestURL) autorelease]);  // Don't use -[NSURL path] which strips the ending slash
+			NSString* requestPath = GCDWebServerUnescapeURLString((__bridge_transfer id)CFURLCopyPath((CFURLRef)requestURL));  // Don't use -[NSURL path] which strips the ending slash
 			DCHECK(requestPath);
 			NSDictionary* requestQuery = nil;
-			NSString* queryString = [(id)CFURLCopyQueryString((CFURLRef)requestURL, NULL) autorelease];  // Don't use -[NSURL query] to make sure query is not unescaped;
+			NSString* queryString = (__bridge_transfer id)CFURLCopyQueryString((CFURLRef)requestURL, NULL);  // Don't use -[NSURL query] to make sure query is not unescaped;
 			if (queryString.length) {
 				requestQuery = GCDWebServerParseURLEncodedForm(queryString);
 				DCHECK(requestQuery);
 			}
-			NSDictionary* requestHeaders = [(id)CFHTTPMessageCopyAllHeaderFields(_requestMessage) autorelease];
+			NSDictionary* requestHeaders = (__bridge_transfer id)CFHTTPMessageCopyAllHeaderFields(_requestMessage);
 			DCHECK(requestHeaders);
 			for (_handler in _server.handlers) {
-				_request = [_handler.matchBlock(requestMethod, requestURL, requestHeaders, requestPath, requestQuery) retain];
+				_request = _handler.matchBlock(requestMethod, requestURL, requestHeaders, requestPath, requestQuery);
 				if (_request) {
 					break;
 				}
@@ -392,7 +387,7 @@ static dispatch_queue_t _formatterQueue = NULL;
 			if (_request) {
 				if (_request.hasBody) {
 					if (extraData.length <= _request.contentLength) {
-						NSString* expectHeader = [(id)CFHTTPMessageCopyHeaderFieldValue(_requestMessage, CFSTR("Expect")) autorelease];
+						NSString* expectHeader = (__bridge id)CFHTTPMessageCopyHeaderFieldValue(_requestMessage, CFSTR("Expect"));
 						if (expectHeader) {
 							if ([expectHeader caseInsensitiveCompare:@"100-continue"] == NSOrderedSame) {
 								[self _writeData:_continueData withCompletionBlock:^(BOOL success) {
@@ -428,8 +423,8 @@ static dispatch_queue_t _formatterQueue = NULL;
 
 - (id)initWithServer:(GCDWebServer*)server address:(NSData*)address socket:(CFSocketNativeHandle)socket {
 	if ((self = [super init])) {
-		_server = [server retain];
-		_address = [address retain];
+		_server = server;
+		_address = address;
 		_socket = socket;
 		
 		[self open];
@@ -440,20 +435,11 @@ static dispatch_queue_t _formatterQueue = NULL;
 - (void)dealloc {
 	[self close];
 	
-	[_server release];
-	[_address release];
-	
-	if (_requestMessage) {
+	if (_requestMessage)
 		CFRelease(_requestMessage);
-	}
-	[_request release];
 	
-	if (_responseMessage) {
+	if (_responseMessage)
 		CFRelease(_responseMessage);
-	}
-	[_response release];
-	
-	[super dealloc];
 }
 
 @end
