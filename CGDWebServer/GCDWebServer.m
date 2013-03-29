@@ -205,8 +205,8 @@ static void _SocketCallBack(CFSocketRef socket, CFSocketCallBackType type, CFDat
 			if (name) {
 				_service = CFNetServiceCreate(kCFAllocatorDefault, CFSTR("local."), CFSTR("_http._tcp"), (__bridge CFStringRef)name, _port);
 				if (_service) {
-					CFNetServiceClientContext context = {0, (__bridge void*)self, NULL, NULL, NULL};
-					CFNetServiceSetClient(_service, _NetServiceClientCallBack, &context);
+					CFNetServiceClientContext netServiceContext = {0, (__bridge void*)self, NULL, NULL, NULL};
+					CFNetServiceSetClient(_service, _NetServiceClientCallBack, &netServiceContext);
 					CFNetServiceScheduleWithRunLoop(_service, [runloop getCFRunLoop], kCFRunLoopCommonModes);
 					CFStreamError error = {0};
 					CFNetServiceRegisterWithOptions(_service, 0, &error);
