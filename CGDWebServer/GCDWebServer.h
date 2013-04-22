@@ -33,19 +33,18 @@ typedef GCDWebServerResponse* (^GCDWebServerProcessBlock)(GCDWebServerRequest* r
 
 @interface GCDWebServer : NSObject {
 @private
-	NSUInteger _port;
-	CFSocketRef _socket;
-	CFNetServiceRef _service;
+    NSUInteger _port;
+    dispatch_source_t _source;
+    CFNetServiceRef _service;
 }
-@property(nonatomic, strong) NSRunLoop *runLoop;
 @property(nonatomic, strong) NSMutableArray *handlers;
 @property(nonatomic, readonly, getter=isRunning) BOOL running;
 @property(nonatomic, readonly) NSUInteger port;
 - (void)addHandlerWithMatchBlock:(GCDWebServerMatchBlock)matchBlock processBlock:(GCDWebServerProcessBlock)processBlock;
 - (void)removeAllHandlers;
 
-- (BOOL)start;  // Default is main runloop, 8080 port and computer name
-- (BOOL)startWithRunloop:(NSRunLoop*)runloop port:(NSUInteger)port bonjourName:(NSString*)name;  // Pass nil name to disable Bonjour or empty string to use computer name
+- (BOOL)start;  // Default is 8080 port and computer name
+- (BOOL)startWithPort:(NSUInteger)port bonjourName:(NSString*)name;  // Pass nil name to disable Bonjour or empty string to use computer name
 - (void)stop;
 @end
 
