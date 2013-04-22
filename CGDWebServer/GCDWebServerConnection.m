@@ -75,11 +75,11 @@ static dispatch_queue_t _formatterQueue = NULL;
 }
 
 - (void)_readDataWithCompletionBlock:(ReadDataCompletionBlock)block {
-	[self _readBufferWithLength:SIZE_T_MAX completionBlock:^(dispatch_data_t buffer) {
+	[self _readBufferWithLength:SIZE_T_MAX completionBlock:^(dispatch_data_t blockBuffer) {
 		
-		if (buffer) {
-			NSMutableData* data = [[NSMutableData alloc] initWithCapacity:dispatch_data_get_size(buffer)];
-			dispatch_data_apply(buffer, ^bool(dispatch_data_t region, size_t offset, const void* buffer, size_t size) {
+		if (blockBuffer) {
+			NSMutableData* data = [[NSMutableData alloc] initWithCapacity:dispatch_data_get_size(blockBuffer)];
+			dispatch_data_apply(blockBuffer, ^bool(dispatch_data_t region, size_t offset, const void* buffer, size_t size) {
 				[data appendBytes:buffer length:size];
 				return true;
 			});
@@ -97,8 +97,8 @@ static dispatch_queue_t _formatterQueue = NULL;
     
     if (buffer) {
       NSMutableData* data = [NSMutableData dataWithCapacity:kHeadersReadBuffer];
-      dispatch_data_apply(buffer, ^bool(dispatch_data_t region, size_t offset, const void* buffer, size_t size) {
-        [data appendBytes:buffer length:size];
+      dispatch_data_apply(buffer, ^bool(dispatch_data_t region, size_t offset, const void* blockBuffer, size_t size) {
+        [data appendBytes:blockBuffer length:size];
         return true;
       });
       NSRange range = [data rangeOfData:_separatorData options:0 range:NSMakeRange(0, data.length)];
@@ -137,8 +137,8 @@ static dispatch_queue_t _formatterQueue = NULL;
 		if (buffer) {
 			NSInteger remainingLength = length - dispatch_data_get_size(buffer);
 			if (remainingLength >= 0) {
-				bool success = dispatch_data_apply(buffer, ^bool(dispatch_data_t region, size_t offset, const void* buffer, size_t size) {
-					NSInteger result = [_request write:buffer maxLength:size];
+				bool success = dispatch_data_apply(buffer, ^bool(dispatch_data_t region, size_t offset, const void* blockBuffer, size_t size) {
+					NSInteger result = [_request write:blockBuffer maxLength:size];
 					if (result != size) {
 						LOG_ERROR(@"Failed writing request body on socket %i (error %i)", _socket, (int)result);
 						return false;

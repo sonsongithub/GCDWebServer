@@ -195,8 +195,8 @@ static void _NetServiceClientCallBack(CFNetServiceRef service, CFStreamError* er
             socklen_t addrlen = sizeof(addr);
             int socket = accept(listeningSocket, &addr, &addrlen);
             if (socket > 0) {
-              int yes = 1;
-              setsockopt(socket, SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));  // Make sure this socket cannot generate SIG_PIPE
+              int localYes = 1;
+              setsockopt(socket, SOL_SOCKET, SO_NOSIGPIPE, &localYes, sizeof(localYes));  // Make sure this socket cannot generate SIG_PIPE
               
               NSData* data = [NSData dataWithBytes:&addr length:addrlen];
               Class connectionClass = [[self class] connectionClass];
